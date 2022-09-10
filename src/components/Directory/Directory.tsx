@@ -11,7 +11,7 @@ const Directory = (props: IDirectory) => {
   return (
     <div className="directory-container">
       {data.map(({ id, title, imageUrl }) => (
-        <CategoryItem id={id} title={title} imageUrl={imageUrl} />
+        <CategoryItem id={id} title={title} imageUrl={imageUrl} key={id} />
       ))}
     </div>
   );
