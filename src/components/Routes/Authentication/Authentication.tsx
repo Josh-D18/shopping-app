@@ -1,8 +1,4 @@
-import { useEffect } from "react";
-import { getRedirectResult } from "firebase/auth";
 import Signup from "../../Signup";
-import { createUserDocumentFromAuth } from "../../utils/firebase/firebase.utils";
-import Button from "../../Button";
 import "./Signin.styles.scss";
 import SigninForm from "../../SigninForm";
 

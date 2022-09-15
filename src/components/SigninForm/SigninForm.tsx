@@ -1,11 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Button from "../Button";
 import FormInput from "../FormInput";
 import {
-  createAuthUserWithEmailAndPassword,
   createUserDocumentFromAuth,
   auth,
-  signInWithGooglePopup,
   signInWithGoogleRedirect,
   signInAuthUserWithEmailAndPassword,
 } from "../utils/firebase/firebase.utils";
@@ -56,11 +54,8 @@ const SigninForm = () => {
     };
 
     try {
-      const response = await signInAuthUserWithEmailAndPassword(
-        email,
-        password
-      );
-      console.log(response);
+      await signInAuthUserWithEmailAndPassword(email, password);
+
       resetSignup();
     } catch (error: any) {
       switch (error.code) {
