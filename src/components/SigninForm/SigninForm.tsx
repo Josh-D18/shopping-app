@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Button from "../Button";
 import FormInput from "../FormInput";
 import {
@@ -7,8 +7,10 @@ import {
   auth,
   signInWithGooglePopup,
   signInWithGoogleRedirect,
+  signInAuthUserWithEmailAndPassword,
 } from "../utils/firebase/firebase.utils";
 import "./SigninForm.styles.scss";
+import { getRedirectResult } from "firebase/auth";
 
 type SignIn = {
   email: string;
@@ -20,8 +22,20 @@ const SigninForm = () => {
     email: "",
     password: "",
   });
-
   const { email, password } = signup;
+
+  useEffect(() => {
+    const getData = async () => {
+      const response = await getRedirectResult(auth);
+
+      if (response !== null) {
+        const { user } = response;
+        const userDocRef = await createUserDocumentFromAuth(user);
+      }
+    };
+
+    getData();
+  });
 
   const handleChange = (e: any) => {
     const { name, value } = e.target;
@@ -42,9 +56,30 @@ const SigninForm = () => {
     };
 
     try {
+      const response = await signInAuthUserWithEmailAndPassword(
+        email,
+        password
+      );
+      console.log(response);
       resetSignup();
-    } catch (error: any) {}
+    } catch (error: any) {
+      switch (error.code) {
+        case "auth/wrong-password":
+          alert("incorrect password for email");
+          break;
+        case "auth/user-not-found":
+          alert("no user with that email is found");
+          break;
+        default:
+          break;
+      }
+    }
   };
+
+  // const logGoogleUser = async () => {
+  //   const { user } = await signInWithGooglePopup();
+  //   const userDocRef = await createUserDocumentFromAuth(user);
+  // };
 
   return (
     <div className="sign-up-contianer">
@@ -69,9 +104,19 @@ const SigninForm = () => {
           required
         />
 
-        <Button classes="inverted" onClick={() => signInWithGoogleRedirect()}>
-          Sign In with Google Redirect
-        </Button>
+        <div>
+          <Button type="submit" classes="inverted">
+            Sign In
+          </Button>
+
+          <Button
+            type="button"
+            classes="google"
+            onClick={() => signInWithGoogleRedirect()}
+          >
+            Sign In with Google Redirect
+          </Button>
+        </div>
       </form>
     </div>
   );
