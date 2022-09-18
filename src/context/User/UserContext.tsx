@@ -30,7 +30,6 @@ const UserProvider = (props: IProvider) => {
         createUserDocumentFromAuth(user);
       }
       setCurrentUser(user);
-      console.log(user);
     });
 
     return unsubscribe;
